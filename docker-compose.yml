@@ -1,0 +1,54 @@
+version: '2'
+
+networks:
+  default:
+    name: parkinson
+
+services:
+
+  mysql:
+    container_name: parkinson_mysql
+    image: mysql:8.0
+    platform: linux/x86_64
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --sql-mode="STRICT_TRANS_TABLES" --default-table-encryption=ON
+    environment:
+      - MYSQL_DATABASE=parkinson
+      - MYSQL_USER=parkinson
+      - MYSQL_PASSWORD=parkinson
+      - MYSQL_ROOT_PASSWORD=parkinson
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_CHARACTER_SET_SERVER=utf8mb4
+      - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
+      - MYSQL_SQL_MODE=STRICT_TRANS_TABLES
+      - MYSQL_DEFAULT_AUTH=mysql_native_password
+    ports:
+      - 3306:3306
+    volumes:
+      - ./docker/static/mysql_db:/var/lib/mysql
+      - ./docker/mysql:/docker-entrypoint-initdb.d
+      - ./docker/configs/mysql:/etc/mysql/conf.d
+
+  app:
+    container_name: parkinson_app
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        SRC_FOLDER: docker/nosrc
+    command: /bin/sh -c /entrypoint_dev.sh
+    volumes:
+      - ./src/:/var/www/html
+      - ./docker/certs:/etc/nginx/certs/
+    env_file:
+      - ./src/.env
+    ports:
+      - "80:80"
+      - "443:443"
+
+  # Container that runs mailhog server
+  mailhog:
+    container_name: parkinson_mail
+    image: 'mailhog/mailhog:latest'
+    ports:
+        - '1025:1025'
+        - '8025:8025'

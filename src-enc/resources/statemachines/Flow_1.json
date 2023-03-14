@@ -1,0 +1,332 @@
+{
+    "configuration": {
+        "version": "1",
+        "stateable_class": "Flow"
+    },
+    "statemachine": {
+        "Initial": {
+            "initial": 1,
+            "transitions": [
+                {
+                    "name": "flow_create",
+                    "to_state": "Draft",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "flow_data_is_required",
+                            "type": "PHP",
+                            "ref": "FlowDataIsRequired"
+                        },
+                        {
+                            "name": "user_is_admin_or_super_admin",
+                            "type": "PHP",
+                            "ref": "UserIsAdminOrSuperAdmin"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "flow_initial_create_draft",
+                            "type": "PHP",
+                            "ref": "FlowInitialCreateDraft"
+                        },
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                }
+            ]
+        },
+        "Draft": {
+            "initial": 0,
+            "transitions": [
+                {
+                    "name": "flow_archive",
+                    "to_state": "Archived",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "flow_data_is_required",
+                            "type": "PHP",
+                            "ref": "FlowDataIsRequired"
+                        },
+                        {
+                            "name": "user_is_admin_or_super_admin_or_flow_coordinator",
+                            "type": "PHP",
+                            "ref": "UserIsAdminOrSuperAdminOrFlowCoordinator"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "flow_draft_archive_archived",
+                            "type": "PHP",
+                            "ref": "FlowDraftArchiveArchived"
+                        },
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                },
+                {
+                    "name": "flow_edit",
+                    "to_state": "Draft",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "flow_data_is_required",
+                            "type": "PHP",
+                            "ref": "FlowDataIsRequired"
+                        },
+                        {
+                            "name": "user_is_admin_or_super_admin_or_flow_coordinator",
+                            "type": "PHP",
+                            "ref": "UserIsAdminOrSuperAdminOrFlowCoordinator"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "flow_draft_edit_draft",
+                            "type": "PHP",
+                            "ref": "FlowDraftEditDraft"
+                        },
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                },
+                {
+                    "name": "flow_publish",
+                    "to_state": "Published",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "flow_data_is_required",
+                            "type": "PHP",
+                            "ref": "FlowDataIsRequired"
+                        },
+                        {
+                            "name": "user_is_admin_or_super_admin_or_flow_coordinator",
+                            "type": "PHP",
+                            "ref": "UserIsAdminOrSuperAdminOrFlowCoordinator"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "flow_draft_publish_published",
+                            "type": "PHP",
+                            "ref": "FlowDraftPublishPublished"
+                        },
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                }
+            ]
+        },
+        "Published": {
+            "initial": 0,
+            "transitions": [
+                {
+                    "name": "flow_archive",
+                    "to_state": "Archived",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "flow_data_is_required",
+                            "type": "PHP",
+                            "ref": "FlowDataIsRequired"
+                        },
+                        {
+                            "name": "user_is_admin_or_super_admin_or_flow_coordinator",
+                            "type": "PHP",
+                            "ref": "UserIsAdminOrSuperAdminOrFlowCoordinator"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "flow_published_archive_archived",
+                            "type": "PHP",
+                            "ref": "FlowPublishedArchiveArchived"
+                        },
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                },
+                {
+                    "name": "flow_edit",
+                    "to_state": "Published",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "flow_data_is_required",
+                            "type": "PHP",
+                            "ref": "FlowDataIsRequired"
+                        },
+                        {
+                            "name": "user_is_admin_or_super_admin_or_flow_coordinator",
+                            "type": "PHP",
+                            "ref": "UserIsAdminOrSuperAdminOrFlowCoordinator"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "flow_published_edit_published",
+                            "type": "PHP",
+                            "ref": "FlowPublishedEditPublished"
+                        },
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                },
+                {
+                    "name": "flow_suspend",
+                    "to_state": "Inactive",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "flow_data_is_required",
+                            "type": "PHP",
+                            "ref": "FlowDataIsRequired"
+                        },
+                        {
+                            "name": "user_is_admin_or_super_admin_or_flow_coordinator",
+                            "type": "PHP",
+                            "ref": "UserIsAdminOrSuperAdminOrFlowCoordinator"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "flow_published_suspend_inactive",
+                            "type": "PHP",
+                            "ref": "FlowPublishedSuspendInactive"
+                        },
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                }
+            ]
+        },
+        "Inactive": {
+            "initial": 0,
+            "transitions": [
+                {
+                    "name": "flow_archive",
+                    "to_state": "Archived",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "flow_data_is_required",
+                            "type": "PHP",
+                            "ref": "FlowDataIsRequired"
+                        },
+                        {
+                            "name": "user_is_admin_or_super_admin_or_flow_coordinator",
+                            "type": "PHP",
+                            "ref": "UserIsAdminOrSuperAdminOrFlowCoordinator"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "flow_inactive_archive_archived",
+                            "type": "PHP",
+                            "ref": "FlowInactiveArchiveArchived"
+                        },
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                },
+                {
+                    "name": "flow_edit",
+                    "to_state": "Inactive",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "flow_data_is_required",
+                            "type": "PHP",
+                            "ref": "FlowDataIsRequired"
+                        },
+                        {
+                            "name": "user_is_admin_or_super_admin_or_flow_coordinator",
+                            "type": "PHP",
+                            "ref": "UserIsAdminOrSuperAdminOrFlowCoordinator"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "flow_inactive_edit_inactive",
+                            "type": "PHP",
+                            "ref": "FlowInactiveEditInactive"
+                        },
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                },
+                {
+                    "name": "flow_publish",
+                    "to_state": "Published",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "flow_data_is_required",
+                            "type": "PHP",
+                            "ref": "FlowDataIsRequired"
+                        },
+                        {
+                            "name": "user_is_admin_or_super_admin_or_flow_coordinator",
+                            "type": "PHP",
+                            "ref": "UserIsAdminOrSuperAdminOrFlowCoordinator"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "flow_inactive_publish_published",
+                            "type": "PHP",
+                            "ref": "FlowInactivePublishPublished"
+                        },
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                }
+            ]
+        },
+        "Archived": {
+            "initial": 0,
+            "transitions": []
+        }
+    }
+}

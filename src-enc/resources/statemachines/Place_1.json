@@ -1,0 +1,272 @@
+{
+    "configuration": {
+        "version": "1",
+        "stateable_class": "Place"
+    },
+    "statemachine": {
+        "Initial": {
+            "initial": 1,
+            "transitions": [
+                {
+                    "name": "place_create",
+                    "to_state": "Inactive",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "place_data_is_required",
+                            "type": "PHP",
+                            "ref": "PlaceDataRequired"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                }
+            ]
+        },
+        "Inactive": {
+            "initial": 0,
+            "transitions": [
+                {
+                    "name": "place_archive",
+                    "to_state": "Archived",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "place_data_is_required",
+                            "type": "PHP",
+                            "ref": "PlaceDataRequired"
+                        },
+                        {
+                            "name": "user_is_admin",
+                            "type": "PHP",
+                            "ref": "UserIsAdmin"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                },
+                {
+                    "name": "place_activate",
+                    "to_state": "Active",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "place_data_is_required",
+                            "type": "PHP",
+                            "ref": "PlaceDataRequired"
+                        },
+                        {
+                            "name": "user_is_admin",
+                            "type": "PHP",
+                            "ref": "UserIsAdmin"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                },
+                {
+                    "name": "place_nylas_update_error",
+                    "to_state": "Error",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "place_data_is_required",
+                            "type": "PHP",
+                            "ref": "PlaceDataRequired"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                }
+            ]
+        },
+        "Active": {
+            "initial": 0,
+            "transitions": [
+                {
+                    "name": "place_archive",
+                    "to_state": "Archived",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "place_data_is_required",
+                            "type": "PHP",
+                            "ref": "PlaceDataRequired"
+                        },
+                        {
+                            "name": "user_is_admin",
+                            "type": "PHP",
+                            "ref": "UserIsAdmin"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        },
+                        {
+                            "name": "active_archive_archived",
+                            "type": "PHP",
+                            "ref": "ActiveArchiveArchived"
+                        }
+                    ]
+                },
+                {
+                    "name": "place_deactivate",
+                    "to_state": "Inactive",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "place_data_is_required",
+                            "type": "PHP",
+                            "ref": "PlaceDataRequired"
+                        },
+                        {
+                            "name": "user_is_admin",
+                            "type": "PHP",
+                            "ref": "UserIsAdmin"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        },
+                        {
+                            "name": "active_deactivate_inactive",
+                            "type": "PHP",
+                            "ref": "ActiveDeactivateInactive"
+                        }
+                    ]
+                },
+                {
+                    "name": "place_nylas_update_error",
+                    "to_state": "Error",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "place_data_is_required",
+                            "type": "PHP",
+                            "ref": "PlaceDataRequired"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        },
+                        {
+                            "name": "active_nylas_update_error_error",
+                            "type": "PHP",
+                            "ref": "ActiveNylasUpdateErrorError"
+                        }
+                    ]
+                }
+            ]
+        },
+        "Error": {
+            "initial": 0,
+            "transitions": [
+                {
+                    "name": "place_archive",
+                    "to_state": "Archived",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "place_data_is_required",
+                            "type": "PHP",
+                            "ref": "PlaceDataRequired"
+                        },
+                        {
+                            "name": "user_is_admin",
+                            "type": "PHP",
+                            "ref": "UserIsAdmin"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                },
+                {
+                    "name": "place_activate",
+                    "to_state": "Active",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "place_data_is_required",
+                            "type": "PHP",
+                            "ref": "PlaceDataRequired"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                },
+                {
+                    "name": "place_deactivate",
+                    "to_state": "Inactive",
+                    "trigger": "COMMAND",
+                    "condition_type": "ACTION",
+                    "condition": [
+                        {
+                            "name": "place_data_is_required",
+                            "type": "PHP",
+                            "ref": "PlaceDataRequired"
+                        }
+                    ],
+                    "action": [
+                        {
+                            "name": "queue_notification",
+                            "type": "PHP",
+                            "ref": "QueueNotification"
+                        }
+                    ]
+                }
+            ]
+        },
+        "Archived": {
+            "initial": 0,
+            "transitions": []
+        }
+    }
+}
