@@ -80,7 +80,7 @@ class CustomAuthController extends Controller
         fputcsv($handle, [@$data["age"],@$data["sex"],@$data["since"],@$data["medication"],@$data["frequency"],@$data["voice"]], ',');
         fclose($handle);
 
-        if(@$_FILES['file3']) Storage::put("{$prefix}-user-{$date}.csv", file_get_contents($filepath.$prefix."-user-".$date.".csv"));
+        Storage::put("{$prefix}-user-{$date}.csv", file_get_contents($filepath.$prefix."-user-".$date.".csv"));
 
         unlink($filepath.$prefix."-user-".$date.".csv");
 
